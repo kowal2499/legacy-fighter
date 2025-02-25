@@ -1,0 +1,21 @@
+docker/mysql
+.idea
+
+###> symfony/framework-bundle ###
+.env
+.env.local
+.env.local.php
+.env.*.local
+app/config/secrets/prod/prod.decrypt.private.php
+app/public/bundles/
+app/var/
+app/vendor/
+###< symfony/framework-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+app/.php-cs-fixer.php
+app/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+
+app/.phpunit.cache
+app/phpunit.xml

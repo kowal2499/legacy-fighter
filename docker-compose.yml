@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+  php-apache:
+    container_name: api-cabs
+    build:
+      context: .
+      dockerfile: ./docker/php-apache/Dockerfile
+    restart: 'no'
+    volumes:
+      - ./app:/var/www/html
+    ports:
+      - ${API_HTTP_PORT}:80
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    environment:
+      TZ: "${TIMEZONE}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_USER: '${MYSQL_USER}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+
+volumes:
+    mysql:
