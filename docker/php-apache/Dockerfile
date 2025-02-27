@@ -13,13 +13,13 @@ RUN apt-get update; \
     		libpng-dev \
     		libwebp-dev \
     		libzip-dev \
+            libpq-dev \
+            unzip \
             zip \
             less \
-            vim \
-            git \
-            mariadb-client; \
+            vim; \
     docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp; \
-    docker-php-ext-install bcmath exif gd intl mysqli pdo pdo_mysql zip; \
+    docker-php-ext-install bcmath exif gd intl pdo pdo_pgsql zip; \
     pecl install imagick-3.6.0; \
     docker-php-ext-enable imagick; \
     rm -r /tmp/pear;
@@ -45,7 +45,8 @@ VOLUME /var/www/html
 
 USER root
 # Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.7.0
+ENV GITHUB_TOKEN ${GITHUB_TOKEN}
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.7.0 --config github-oauth.github.com ${GITHUB_TOKEN}
 
 USER user
 WORKDIR /var/www/html
