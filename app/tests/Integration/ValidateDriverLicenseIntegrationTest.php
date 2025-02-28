@@ -25,9 +25,7 @@ class ValidateDriverLicenseIntegrationTest extends KernelTestCase
         $this->createActiveDriverWithLicense('invalidLicense');
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function canCreateDriverWithValidLicense(): void
     {
         // when
@@ -39,6 +37,7 @@ class ValidateDriverLicenseIntegrationTest extends KernelTestCase
         self::assertEquals(Driver::STATUS_ACTIVE, $loaded->getStatus());
     }
 
+    /** @test */
     public function canCreateInactiveDriverWithInvalidLicense(): void
     {
         // when
@@ -50,9 +49,7 @@ class ValidateDriverLicenseIntegrationTest extends KernelTestCase
         self::assertEquals(Driver::STATUS_INACTIVE, $loaded->getStatus());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function canChangeLicenseForValidOne(): void
     {
         // given
@@ -66,9 +63,7 @@ class ValidateDriverLicenseIntegrationTest extends KernelTestCase
         self::assertEquals('99999740614992TL', $loaded->getDriverLicense());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function cannotChangeLicenseForInvalidOne(): void
     {
         // given
@@ -81,9 +76,7 @@ class ValidateDriverLicenseIntegrationTest extends KernelTestCase
         $this->changeLicenseTo('invalid', $driver);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function canActivateDriverWithValidLicense(): void
     {
         // given
@@ -97,9 +90,7 @@ class ValidateDriverLicenseIntegrationTest extends KernelTestCase
         self::assertEquals(Driver::STATUS_ACTIVE, $loaded->getStatus());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function cannotActivateDriverWithInvalidLicense(): void
     {
         // given
