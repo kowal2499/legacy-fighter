@@ -1,4 +1,5 @@
 docker/database
+docker/mysql
 .idea
 
 ###> symfony/framework-bundle ###
