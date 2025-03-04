@@ -26,7 +26,7 @@ class DriverFeeService
         if($transit->getDriversFee() !== null) {
             return $transit->getDriversFee();
         }
-        $transitPrice = $transit->getPrice();
+        $transitPrice = $transit->getPrice()->toInt();
         $driverFee = $this->driverFeeRepository->findByDriver($transit->getDriver());
         if($driverFee === null) {
             throw new \InvalidArgumentException('driver Fees not defined for driver, driver id = '.$transit->getDriver()->getId());

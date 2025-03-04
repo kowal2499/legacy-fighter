@@ -2,8 +2,11 @@
 
 namespace LegacyFighter\Cabs\Money;
 
+use Doctrine\ORM\Mapping\Column;
+
 class Money
 {
+    #[Column(type: 'integer', nullable: true)]
     private int $value;
 
     private function __construct(int $value)

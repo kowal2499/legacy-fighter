@@ -7,6 +7,7 @@ namespace LegacyFighter\Cabs\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Embedded;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
@@ -14,6 +15,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 use LegacyFighter\Cabs\Common\BaseEntity;
+use LegacyFighter\Cabs\Money\Money;
 
 #[Entity]
 class Transit extends BaseEntity
@@ -97,8 +99,8 @@ class Transit extends BaseEntity
     private ?float $km = null;
 
     // https://stackoverflow.com/questions/37107123/sould-i-store-price-as-decimal-or-integer-in-mysql
-    #[Column(type: 'integer', nullable: true)]
-    private ?int $price = null;
+    #[Column(type: 'money', nullable: true)]
+    private ?Money $price = null;
 
     #[Column(type: 'integer', nullable: true)]
     private ?int $estimatedPrice = null;
@@ -286,13 +288,13 @@ class Transit extends BaseEntity
         $this->estimateCost();
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): ?Money
     {
         return $this->price;
     }
 
     //just for testing
-    public function setPrice(?int $price): void
+    public function setPrice(?Money $price): void
     {
         $this->price = $price;
     }
@@ -353,14 +355,14 @@ class Transit extends BaseEntity
             throw new \RuntimeException('Estimating cost for completed transit is forbidden, id = ', $this->id);
         }
 
-        $estimated = $this->calculateCost();
+        $estimated = $this->calculateCost()->toInt();
         $this->estimatedPrice = $estimated;
         $this->price = null;
 
         return $this->estimatedPrice;
     }
 
-    public function calculateFinalCosts(): int
+    public function calculateFinalCosts(): Money
     {
         if($this->status === self::STATUS_COMPLETED) {
             return $this->calculateCost();
@@ -369,7 +371,7 @@ class Transit extends BaseEntity
         }
     }
 
-    private function calculateCost(): int
+    private function calculateCost(): Money
     {
         $baseFee = self::BASE_FEE;
         $factorToCalculate = $this->factor;
@@ -412,7 +414,7 @@ class Transit extends BaseEntity
         }
 
         $finalPrice = (int) ceil(($this->km * $kmRate * $factorToCalculate + $baseFee) * 100);
-        $this->price = $finalPrice;
+        $this->price = Money::from($finalPrice);
         return $this->price;
     }
 

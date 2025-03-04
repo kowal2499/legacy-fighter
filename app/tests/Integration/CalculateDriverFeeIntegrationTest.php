@@ -5,6 +5,7 @@ namespace LegacyFighter\Cabs\Tests\Integration;
 use LegacyFighter\Cabs\Entity\Driver;
 use LegacyFighter\Cabs\Entity\DriverFee;
 use LegacyFighter\Cabs\Entity\Transit;
+use LegacyFighter\Cabs\Money\Money;
 use LegacyFighter\Cabs\Repository\DriverFeeRepository;
 use LegacyFighter\Cabs\Repository\TransitRepository;
 use LegacyFighter\Cabs\Service\DriverFeeService;
@@ -97,7 +98,7 @@ class CalculateDriverFeeIntegrationTest extends KernelTestCase
     {
         $transit = new Transit();
         $transit->setStatus(Transit::STATUS_DRAFT);
-        $transit->setPrice($price);
+        $transit->setPrice(Money::from($price));
         $transit->setDriver($driver);
         $transit->setDateTime(new \DateTimeImmutable('2020-10-20'));
         return $this->transitRepository->save($transit);
