@@ -58,7 +58,7 @@ class CalculateTransitPriceTest extends TestCase
         $price = $transit->estimateCost();
 
         //then
-        self::assertEquals(2900, $price); //29.00
+        self::assertEquals(Money::from(2900), $price); //29.00
     }
 
     private function transit(string $status, float $km): Transit

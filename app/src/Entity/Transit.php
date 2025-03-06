@@ -102,11 +102,11 @@ class Transit extends BaseEntity
     #[Column(type: 'money', nullable: true)]
     private ?Money $price = null;
 
-    #[Column(type: 'integer', nullable: true)]
-    private ?int $estimatedPrice = null;
+    #[Column(type: 'money', nullable: true)]
+    private ?Money $estimatedPrice = null;
 
-    #[Column(type: 'integer', nullable: true)]
-    private ?int $driversFee = null;
+    #[Column(type: 'money', nullable: true)]
+    private ?Money $driversFee = null;
 
     #[Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $dateTime = null;
@@ -299,22 +299,22 @@ class Transit extends BaseEntity
         $this->price = $price;
     }
 
-    public function getEstimatedPrice(): ?int
+    public function getEstimatedPrice(): ?Money
     {
         return $this->estimatedPrice;
     }
 
-    public function setEstimatedPrice(?int $estimatedPrice): void
+    public function setEstimatedPrice(?Money $estimatedPrice): void
     {
         $this->estimatedPrice = $estimatedPrice;
     }
 
-    public function getDriversFee(): ?int
+    public function getDriversFee(): ?Money
     {
         return $this->driversFee;
     }
 
-    public function setDriversFee(?int $driversFee): void
+    public function setDriversFee(?Money $driversFee): void
     {
         $this->driversFee = $driversFee;
     }
@@ -349,13 +349,13 @@ class Transit extends BaseEntity
         $this->client = $client;
     }
 
-    public function estimateCost(): int
+    public function estimateCost(): Money
     {
         if($this->status === self::STATUS_COMPLETED) {
             throw new \RuntimeException('Estimating cost for completed transit is forbidden, id = ', $this->id);
         }
 
-        $estimated = $this->calculateCost()->toInt();
+        $estimated = $this->calculateCost();
         $this->estimatedPrice = $estimated;
         $this->price = null;
 

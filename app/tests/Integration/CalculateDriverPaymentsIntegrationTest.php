@@ -43,17 +43,17 @@ class CalculateDriverPaymentsIntegrationTest extends KernelTestCase
         //when
         $feeOctober = $this->driverService->calculateDriverMonthlyPayment($driver->getId(), 2000, 10);
         //then
-        self::assertEquals(180, $feeOctober);
+        self::assertEquals(Money::from(180), $feeOctober);
 
         //when
         $feeNovember = $this->driverService->calculateDriverMonthlyPayment($driver->getId(), 2000, 11);
         //then
-        self::assertEquals(70, $feeNovember);
+        self::assertEquals(Money::from(70), $feeNovember);
 
         //when
         $feeDecember = $this->driverService->calculateDriverMonthlyPayment($driver->getId(), 2000, 12);
         //then
-        self::assertEquals(5, $feeDecember);
+        self::assertEquals(Money::from(5), $feeDecember);
     }
 
     /** @test */
@@ -76,18 +76,18 @@ class CalculateDriverPaymentsIntegrationTest extends KernelTestCase
         $payments = $this->driverService->calculateDriverYearlyPayment($driver->getId(), 2000);
 
         //then
-        self::assertEquals(0, $payments[1]);
-        self::assertEquals(0, $payments[2]);
-        self::assertEquals(0, $payments[3]);
-        self::assertEquals(0, $payments[4]);
-        self::assertEquals(0, $payments[5]);
-        self::assertEquals(0, $payments[6]);
-        self::assertEquals(0, $payments[7]);
-        self::assertEquals(0, $payments[8]);
-        self::assertEquals(0, $payments[9]);
-        self::assertEquals(180, $payments[10]);
-        self::assertEquals(70, $payments[11]);
-        self::assertEquals(5, $payments[12]);
+        self::assertEquals(Money::zero(), $payments[1]);
+        self::assertEquals(Money::zero(), $payments[2]);
+        self::assertEquals(Money::zero(), $payments[3]);
+        self::assertEquals(Money::zero(), $payments[4]);
+        self::assertEquals(Money::zero(), $payments[5]);
+        self::assertEquals(Money::zero(), $payments[6]);
+        self::assertEquals(Money::zero(), $payments[7]);
+        self::assertEquals(Money::zero(), $payments[8]);
+        self::assertEquals(Money::zero(), $payments[9]);
+        self::assertEquals(Money::from(180), $payments[10]);
+        self::assertEquals(Money::from(70), $payments[11]);
+        self::assertEquals(Money::from(5), $payments[12]);
     }
 
     private function aDriver(): Driver
@@ -97,7 +97,7 @@ class CalculateDriverPaymentsIntegrationTest extends KernelTestCase
 
     private function driverHasFeeWithMin(Driver $driver, string $feeType, int $amount, int $min): DriverFee
     {
-        $driverFee = new DriverFee($feeType, $driver, $amount, $min);
+        $driverFee = new DriverFee($feeType, $driver, $amount, Money::from($min));
         return $this->feeRepository->save($driverFee);
     }
 

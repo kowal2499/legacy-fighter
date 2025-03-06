@@ -14,10 +14,10 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class CalculateDriverFeeIntegrationTest extends KernelTestCase
 {
-    private DriverService $driverService;
-    private TransitRepository $transitRepository;
-    private DriverFeeRepository $feeRepository;
     private DriverFeeService $driverFeeService;
+    private DriverFeeRepository $feeRepository;
+    private TransitRepository $transitRepository;
+    private DriverService $driverService;
 
     protected function setUp(): void
     {
@@ -41,7 +41,7 @@ class CalculateDriverFeeIntegrationTest extends KernelTestCase
         $fee = $this->driverFeeService->calculateDriverFee($transit->getId());
 
         //then
-        self::assertEquals(50, $fee);
+        self::assertEquals(Money::from(50), $fee);
     }
 
     /** @test */
@@ -58,7 +58,7 @@ class CalculateDriverFeeIntegrationTest extends KernelTestCase
         $fee = $this->driverFeeService->calculateDriverFee($transit->getId());
 
         //then
-        self::assertEquals(40, $fee);
+        self::assertEquals(Money::from(40), $fee);
     }
 
     /** @test */
@@ -75,7 +75,7 @@ class CalculateDriverFeeIntegrationTest extends KernelTestCase
         $fee = $this->driverFeeService->calculateDriverFee($transit->getId());
 
         //then
-        self::assertEquals(5, $fee);
+        self::assertEquals(Money::from(5), $fee);
     }
 
     private function aDriver(): Driver
@@ -85,7 +85,7 @@ class CalculateDriverFeeIntegrationTest extends KernelTestCase
 
     private function driverHasFeeWithMin(Driver $driver, string $feeType, int $amount, int $min): DriverFee
     {
-        $driverFee = new DriverFee($feeType, $driver, $amount, $min);
+        $driverFee = new DriverFee($feeType, $driver, $amount, Money::from($min));
         return $this->feeRepository->save($driverFee);
     }
 
