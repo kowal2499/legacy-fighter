@@ -16,9 +16,7 @@ class ValidateDriverLicenseIntegrationTest extends KernelTestCase
         $this->driverService = $this->getContainer()->get(DriverService::class);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function cannotCreateDriverWithInvalidLicense(): void
     {
         $this->expectException(\InvalidArgumentException::class);
