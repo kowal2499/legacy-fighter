@@ -7,6 +7,7 @@ namespace LegacyFighter\Cabs\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Embedded;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
@@ -14,6 +15,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 use LegacyFighter\Cabs\Common\BaseEntity;
+use LegacyFighter\Cabs\Money\Money;
 
 #[Entity]
 class Transit extends BaseEntity
@@ -97,14 +99,14 @@ class Transit extends BaseEntity
     private ?float $km = null;
 
     // https://stackoverflow.com/questions/37107123/sould-i-store-price-as-decimal-or-integer-in-mysql
-    #[Column(type: 'integer', nullable: true)]
-    private ?int $price = null;
+    #[Column(type: 'money', nullable: true)]
+    private ?Money $price = null;
 
-    #[Column(type: 'integer', nullable: true)]
-    private ?int $estimatedPrice = null;
+    #[Column(type: 'money', nullable: true)]
+    private ?Money $estimatedPrice = null;
 
-    #[Column(type: 'integer', nullable: true)]
-    private ?int $driversFee = null;
+    #[Column(type: 'money', nullable: true)]
+    private ?Money $driversFee = null;
 
     #[Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $dateTime = null;
@@ -286,33 +288,33 @@ class Transit extends BaseEntity
         $this->estimateCost();
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): ?Money
     {
         return $this->price;
     }
 
     //just for testing
-    public function setPrice(?int $price): void
+    public function setPrice(?Money $price): void
     {
         $this->price = $price;
     }
 
-    public function getEstimatedPrice(): ?int
+    public function getEstimatedPrice(): ?Money
     {
         return $this->estimatedPrice;
     }
 
-    public function setEstimatedPrice(?int $estimatedPrice): void
+    public function setEstimatedPrice(?Money $estimatedPrice): void
     {
         $this->estimatedPrice = $estimatedPrice;
     }
 
-    public function getDriversFee(): ?int
+    public function getDriversFee(): ?Money
     {
         return $this->driversFee;
     }
 
-    public function setDriversFee(?int $driversFee): void
+    public function setDriversFee(?Money $driversFee): void
     {
         $this->driversFee = $driversFee;
     }
@@ -347,7 +349,7 @@ class Transit extends BaseEntity
         $this->client = $client;
     }
 
-    public function estimateCost(): int
+    public function estimateCost(): Money
     {
         if($this->status === self::STATUS_COMPLETED) {
             throw new \RuntimeException('Estimating cost for completed transit is forbidden, id = ', $this->id);
@@ -360,7 +362,7 @@ class Transit extends BaseEntity
         return $this->estimatedPrice;
     }
 
-    public function calculateFinalCosts(): int
+    public function calculateFinalCosts(): Money
     {
         if($this->status === self::STATUS_COMPLETED) {
             return $this->calculateCost();
@@ -369,7 +371,7 @@ class Transit extends BaseEntity
         }
     }
 
-    private function calculateCost(): int
+    private function calculateCost(): Money
     {
         $baseFee = self::BASE_FEE;
         $factorToCalculate = $this->factor;
@@ -412,7 +414,7 @@ class Transit extends BaseEntity
         }
 
         $finalPrice = (int) ceil(($this->km * $kmRate * $factorToCalculate + $baseFee) * 100);
-        $this->price = $finalPrice;
+        $this->price = Money::from($finalPrice);
         return $this->price;
     }
 
